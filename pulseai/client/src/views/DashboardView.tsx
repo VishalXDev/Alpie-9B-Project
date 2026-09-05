@@ -1,10 +1,10 @@
-import { KPICard } from './components/dashboard/KPICard';
-import { RevenueChart } from './components/dashboard/RevenueChart';
-import { UserAcquisitionChart } from './components/dashboard/UserAcquisitionChart';
-import { ActivityTable } from './components/dashboard/ActivityTable';
-import { useDashboardStats, useRevenueData, useUserAcquisitionData, useActivityLogs } from '../hooks/useData';
-import { Card } from '../components/ui/Card';
-import { Skeleton } from '../components/ui/Skeleton';
+import { KPICard } from './components/dashboard/KPICard.tsx';
+import { RevenueChart } from './components/dashboard/RevenueChart.tsx';
+import { UserAcquisitionChart } from './components/dashboard/UserAcquisitionChart.tsx';
+import { ActivityTable } from './components/dashboard/ActivityTable.tsx';
+import { useDashboardStats, useRevenueData, useUserAcquisitionData, useActivityLogs } from '../hooks/useData.tsx';
+import { Card } from '../components/ui/Card.tsx';
+import { Skeleton } from '../components/ui/Skeleton.tsx';
 
 interface DashboardViewProps {
   stats: any;
