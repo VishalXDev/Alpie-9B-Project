@@ -4,13 +4,13 @@ export interface ErrorResponse {
   success: false;
   error: string;
   details?: string;
-  statusCode?: number;
+  statusCode: number;
   timestamp: string;
 }
 
 // Global error handling middleware
 export function errorHandler(
-  err: Error,
+  err: Error & { statusCode?: number },
   req: Request,
   res: Response,
   next: NextFunction
