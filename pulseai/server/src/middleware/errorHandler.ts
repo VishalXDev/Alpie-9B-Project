@@ -10,14 +10,14 @@ export interface ErrorResponse {
 
 // Global error handling middleware
 export function errorHandler(
-  err: Error & { statusCode?: number },
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ): void {
   console.error(`[ERROR] ${req.method} ${req.path}:`, err);
   
-  const statusCode = err.statusCode || 500;
+  const statusCode = (err as any).statusCode || 500;
   const message = err.message || 'Internal Server Error';
   
   const errorResponse: ErrorResponse = {
@@ -34,7 +34,7 @@ export function errorHandler(
 // Not found middleware
 export function notFound(req: Request, res: Response, next: NextFunction): void {
   const error = new Error(`Not Found - ${req.originalUrl}`);
-  error.statusCode = 404;
+  (error as any).statusCode = 404;
   next(error);
 }
 
