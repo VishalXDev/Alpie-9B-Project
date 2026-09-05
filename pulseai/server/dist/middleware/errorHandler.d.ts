@@ -6,9 +6,7 @@ export interface ErrorResponse {
     statusCode: number;
     timestamp: string;
 }
-export declare function errorHandler(err: Error & {
-    statusCode?: number;
-}, req: Request, res: Response, next: NextFunction): void;
+export declare function errorHandler(err: any, req: Request, res: Response, next: NextFunction): void;
 export declare function notFound(req: Request, res: Response, next: NextFunction): void;
 export declare function validateRequest<T extends Record<string, unknown>>(schema: T): (req: Request, res: Response, next: NextFunction) => void;
 //# sourceMappingURL=errorHandler.d.ts.map
