@@ -89,4 +89,27 @@ app.use(notFound);
 // Global error handler
 app.use(errorHandler);
 
+// Start server
+const server = app.listen(config.port, () => {
+  console.log(`🚀 PulseAI Server running on port ${config.port}`);
+  console.log(`📡 API available at http://localhost:${config.port}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
 export default app;
