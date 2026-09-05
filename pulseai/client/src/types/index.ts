@@ -18,6 +18,14 @@ export interface Project {
   updatedAt: string;
 }
 
+export interface CreateProjectInput {
+  title: string;
+  description: string;
+  status?: 'active' | 'pending' | 'completed';
+  progress?: number;
+  dueDate?: string;
+}
+
 export interface ActivityLog {
   id: string;
   timestamp: string;

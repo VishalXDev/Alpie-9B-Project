@@ -168,6 +168,9 @@ export function initializeData(): void {
   ];
 }
 
+// Initialize on module load
+initializeData();
+
 // KPI Data
 export function getKPIS(): KPI[] {
   return [
@@ -268,6 +271,72 @@ export function getProjects(status?: 'active' | 'pending' | 'completed', search?
   }
   
   return result;
+}
+
+// Create a new project
+export function createProject(data: {
+  title: string;
+  description: string;
+  status?: 'active' | 'pending' | 'completed';
+  progress?: number;
+  dueDate?: string;
+}): Project {
+  const newProject: Project = {
+    id: uuidv4(),
+    title: data.title,
+    description: data.description || '',
+    status: data.status || 'active',
+    progress: typeof data.progress === 'number' ? Math.min(100, Math.max(0, data.progress)) : 0,
+    dueDate: data.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  projects.unshift(newProject);
+  
+  addActivityLog({
+    type: 'user_action',
+    message: `Created new project "${newProject.title}"`,
+    metadata: { projectId: newProject.id },
+  });
+
+  return newProject;
+}
+
+// Update an existing project
+export function updateProject(id: string, updates: Partial<Project>): Project | null {
+  const index = projects.findIndex(p => p.id === id);
+  if (index === -1) return null;
+  
+  projects[index] = {
+    ...projects[index],
+    ...updates,
+    updatedAt: new Date(),
+  };
+
+  addActivityLog({
+    type: 'user_action',
+    message: `Updated project "${projects[index].title}"`,
+    metadata: { projectId: id },
+  });
+
+  return projects[index];
+}
+
+// Delete a project
+export function deleteProject(id: string): boolean {
+  const index = projects.findIndex(p => p.id === id);
+  if (index === -1) return false;
+  
+  const title = projects[index].title;
+  projects.splice(index, 1);
+
+  addActivityLog({
+    type: 'user_action',
+    message: `Deleted project "${title}"`,
+    metadata: { projectId: id },
+  });
+
+  return true;
 }
 
 // Get recent activity logs

@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { Card } from '../ui/Card';
 import { formatCurrency, formatDate } from '../../utils';
 
@@ -37,7 +37,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
                 borderRadius: '8px',
                 color: '#fff',
               }}
-              formatter={(value: number) => [formatCurrency(value), 'Revenue']}
+              formatter={(value: any) => [formatCurrency(Number(value) || 0), 'Revenue']}
               labelFormatter={(label) => `Date: ${formatDate(label)}`}
             />
             <Area

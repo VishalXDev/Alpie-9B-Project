@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { MainLayout } from './components/layout/MainLayout';
@@ -10,7 +11,7 @@ import { useDashboardStats } from './hooks/useData';
 
 function App() {
   const { data: stats, isLoading } = useDashboardStats();
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -39,7 +40,7 @@ function App() {
       <MainLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<DashboardView stats={stats?.data || null} />} />
+          <Route path="/dashboard" element={<DashboardView stats={stats || null} />} />
           <Route path="/analytics" element={<AnalyticsView />} />
           <Route path="/projects" element={<ProjectsView />} />
           <Route path="/assistant" element={<ChatInterface />} />

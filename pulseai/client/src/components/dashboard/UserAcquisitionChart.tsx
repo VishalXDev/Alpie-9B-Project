@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card } from '../ui/Card';
-import { formatNumber } from '../../utils';
+import { formatNumber, formatDate } from '../../utils';
 
 interface UserAcquisitionChartProps {
   data: Array<{ date: string; newUsers: number; activeUsers: number }>;
@@ -27,7 +27,7 @@ export function UserAcquisitionChart({ data }: UserAcquisitionChartProps) {
                 borderRadius: '8px',
                 color: '#fff',
               }}
-              formatter={(value: number, name: string) => [formatNumber(value), name]}
+              formatter={(value: any, name: string) => [formatNumber(Number(value) || 0), name]}
               labelFormatter={(label) => `Date: ${formatDate(label)}`}
             />
             <Bar dataKey="newUsers" fill="#10b981" name="New Users" radius={[4, 4, 0, 0]} />

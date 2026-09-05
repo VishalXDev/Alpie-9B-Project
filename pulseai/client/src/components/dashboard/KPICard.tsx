@@ -1,4 +1,5 @@
-import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Users, DollarSign, FolderOpen, Sparkles } from 'lucide-react';
+import React from 'react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { cn } from '../../utils';
 

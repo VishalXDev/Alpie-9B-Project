@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from '../../utils';
 
 interface TableProps {
@@ -59,18 +60,21 @@ export function TableHead({ children, className = '' }: TableHeadProps) {
   );
 }
 
-interface TableCellProps {
+interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   children: React.ReactNode;
   className?: string;
+  colSpan?: number;
 }
 
-export function TableCell({ children, className = '' }: TableCellProps) {
+export function TableCell({ children, className = '', colSpan, ...props }: TableCellProps) {
   return (
     <td
+      colSpan={colSpan}
       className={cn(
         'px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100',
         className
       )}
+      {...props}
     >
       {children}
     </td>

@@ -3,13 +3,14 @@ import { RevenueChart } from '../components/dashboard/RevenueChart';
 import { UserAcquisitionChart } from '../components/dashboard/UserAcquisitionChart';
 import { Card } from '../components/ui/Card';
 import { Skeleton } from '../components/ui/Skeleton';
+import { RevenueDataPoint, UserAcquisitionDataPoint } from '../types';
 
 export function AnalyticsView() {
   const { data: revenueData, isLoading: loadingRevenue } = useRevenueData();
   const { data: userAcquisitionData, isLoading: loadingUsers } = useUserAcquisitionData();
 
-  const revenue = revenueData?.data || [];
-  const users = userAcquisitionData?.data || [];
+  const revenue: RevenueDataPoint[] = revenueData || [];
+  const users: UserAcquisitionDataPoint[] = userAcquisitionData || [];
 
   return (
     <div className="space-y-6">
@@ -29,7 +30,7 @@ export function AnalyticsView() {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Total Revenue</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                ${revenue.reduce((sum, d) => sum + d.revenue, 0).toLocaleString()}
+                ${revenue.reduce((sum: number, d: RevenueDataPoint) => sum + d.revenue, 0).toLocaleString()}
               </p>
             </div>
           </div>
@@ -45,7 +46,7 @@ export function AnalyticsView() {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {revenue.reduce((sum, d) => sum + d.users, 0).toLocaleString()}
+                {revenue.reduce((sum: number, d: RevenueDataPoint) => sum + d.users, 0).toLocaleString()}
               </p>
             </div>
           </div>
@@ -61,7 +62,7 @@ export function AnalyticsView() {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Avg. Revenue</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                ${(revenue.length > 0 ? revenue.reduce((sum, d) => sum + d.revenue, 0) / revenue.length : 0).toLocaleString()}
+                ${(revenue.length > 0 ? revenue.reduce((sum: number, d: RevenueDataPoint) => sum + d.revenue, 0) / revenue.length : 0).toLocaleString()}
               </p>
             </div>
           </div>

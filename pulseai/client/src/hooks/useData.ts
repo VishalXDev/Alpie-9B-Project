@@ -4,10 +4,14 @@ import {
   getRevenueData,
   getUserAcquisitionData,
   getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
   getActivityLogs,
   sendChatMessage,
   checkHealth,
 } from '../services/api';
+import { CreateProjectInput, Project } from '../types';
 
 // Dashboard Stats Query
 export function useDashboardStats() {
@@ -43,6 +47,49 @@ export function useProjects(filters?: { status?: string; search?: string }) {
     queryKey: ['projects', filters],
     queryFn: () => getProjects(filters),
     staleTime: 30000,
+  });
+}
+
+// Create Project Mutation
+export function useCreateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (newProject: CreateProjectInput) => createProject(newProject),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardStats'] });
+      queryClient.invalidateQueries({ queryKey: ['activityLogs'] });
+    },
+  });
+}
+
+// Update Project Mutation
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Project> }) =>
+      updateProject(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardStats'] });
+      queryClient.invalidateQueries({ queryKey: ['activityLogs'] });
+    },
+  });
+}
+
+// Delete Project Mutation
+export function useDeleteProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteProject(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardStats'] });
+      queryClient.invalidateQueries({ queryKey: ['activityLogs'] });
+    },
   });
 }
 

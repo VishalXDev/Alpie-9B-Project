@@ -1,6 +1,7 @@
 import {
   DashboardStats,
   Project,
+  CreateProjectInput,
   ActivityLog,
   RevenueDataPoint,
   UserAcquisitionDataPoint,
@@ -51,7 +52,7 @@ export async function getUserAcquisitionData(): Promise<UserAcquisitionDataPoint
   return response.data!;
 }
 
-// Projects
+// Projects: List
 export async function getProjects(filters?: { status?: string; search?: string }): Promise<{
   data: Project[];
   meta: { total: number; filters: Record<string, unknown> };
@@ -61,11 +62,46 @@ export async function getProjects(filters?: { status?: string; search?: string }
   if (filters?.search) params.append('search', filters.search);
   
   const endpoint = params.toString() ? `?${params.toString()}` : '';
-  const response = await apiRequest<{ data: Project[]; meta: { total: number; filters: Record<string, unknown> } }>(
+  const response = await apiRequest<Project[]>(
     `/projects${endpoint}`
   );
   if (!response.success) throw new Error(response.error || 'Failed to fetch projects');
-  return response;
+  return {
+    data: response.data || [],
+    meta: (response.meta as { total: number; filters: Record<string, unknown> }) || {
+      total: response.data?.length || 0,
+      filters: {},
+    },
+  };
+}
+
+// Projects: Create
+export async function createProject(data: CreateProjectInput): Promise<Project> {
+  const response = await apiRequest<Project>('/projects', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!response.success) throw new Error(response.error || 'Failed to create project');
+  return response.data!;
+}
+
+// Projects: Update
+export async function updateProject(id: string, updates: Partial<Project>): Promise<Project> {
+  const response = await apiRequest<Project>(`/projects/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+  if (!response.success) throw new Error(response.error || 'Failed to update project');
+  return response.data!;
+}
+
+// Projects: Delete
+export async function deleteProject(id: string): Promise<boolean> {
+  const response = await apiRequest<{ message: string }>(`/projects/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.success) throw new Error(response.error || 'Failed to delete project');
+  return true;
 }
 
 // Activity Logs
@@ -97,6 +133,9 @@ export default {
   getRevenueData,
   getUserAcquisitionData,
   getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
   getActivityLogs,
   sendChatMessage,
   checkHealth,

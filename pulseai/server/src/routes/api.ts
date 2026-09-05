@@ -4,6 +4,9 @@ import {
   getRevenueData,
   getUserAcquisitionData,
   getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
   getActivityLogs,
   getChatMessages,
   addActivityLog,
@@ -79,7 +82,7 @@ router.get('/analytics/users', (req: Request, res: Response) => {
   }
 });
 
-// Projects with filtering
+// Projects: List with filtering
 router.get('/projects', (req: Request, res: Response) => {
   try {
     const { status, search } = req.query;
@@ -101,6 +104,102 @@ router.get('/projects', (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch projects',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Projects: Create a new project
+router.post('/projects', (req: Request, res: Response) => {
+  try {
+    const { title, description, status, progress, dueDate } = req.body;
+    
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        details: 'Project title is required',
+      });
+    }
+
+    const newProject = createProject({
+      title: title.trim(),
+      description: typeof description === 'string' ? description.trim() : '',
+      status: ['active', 'pending', 'completed'].includes(status) ? status : 'active',
+      progress: typeof progress === 'number' ? progress : 0,
+      dueDate: dueDate || undefined,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: newProject,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create project',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Projects: Update a project
+router.put('/projects/:id', (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { title, description, status, progress, dueDate } = req.body;
+
+    const updated = updateProject(id, {
+      ...(title !== undefined && { title }),
+      ...(description !== undefined && { description }),
+      ...(status !== undefined && { status }),
+      ...(progress !== undefined && { progress }),
+      ...(dueDate !== undefined && { dueDate }),
+    });
+
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        error: 'Not found',
+        details: `Project with ID ${id} not found`,
+      });
+    }
+
+    res.json({
+      success: true,
+      data: updated,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update project',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Projects: Delete a project
+router.delete('/projects/:id', (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const success = deleteProject(id);
+
+    if (!success) {
+      return res.status(404).json({
+        success: false,
+        error: 'Not found',
+        details: `Project with ID ${id} not found`,
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Project deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete project',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
   }
