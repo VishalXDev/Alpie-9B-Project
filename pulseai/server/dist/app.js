@@ -79,5 +79,25 @@ app.get('/', (req, res) => {
 app.use(errorHandler_1.notFound);
 // Global error handler
 app.use(errorHandler_1.errorHandler);
+// Start server
+const server = app.listen(env_1.default.port, () => {
+    console.log(`🚀 PulseAI Server running on port ${env_1.default.port}`);
+    console.log(`📡 API available at http://localhost:${env_1.default.port}`);
+});
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});
+process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});
 exports.default = app;
 //# sourceMappingURL=app.js.map
