@@ -113,36 +113,12 @@ export async function getActivityLogs(limit: number = 10): Promise<ActivityLog[]
 
 // AI Chat
 export async function sendChatMessage(message: string): Promise<{ response: string }> {
-  const requestId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  const startTime = Date.now();
-  
-  console.log(`[Frontend] Chat request ${requestId} initiated`);
-  console.log(`[Frontend] Message: "${message.substring(0, 100)}${message.length > 100 ? '...' : ''}"`);
-  console.log(`[Frontend] Message length: ${message.length} characters`);
-  
-  try {
-    const response = await apiRequest<{ response: string }>('/assistant/chat', {
-      method: 'POST',
-      body: JSON.stringify({ message }),
-    });
-    
-    const endTime = Date.now();
-    const processingTime = endTime - startTime;
-    
-    console.log(`[Frontend] Chat response received for ${requestId}`);
-    console.log(`[Frontend] Response: "${response.data?.response.substring(0, 100)}${response.data?.response?.length > 100 ? '...' : ''}"`);
-    console.log(`[Frontend] Processing time: ${processingTime}ms`);
-    
-    if (!response.success) {
-      throw new Error(response.error || 'Failed to send message');
-    }
-    
-    return response.data!;
-  } catch (error) {
-    console.error(`[Frontend] Chat request ${requestId} failed`);
-    console.error(`[Frontend] Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    throw error;
-  }
+  const response = await apiRequest<{ response: string }>('/assistant/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
+  if (!response.success) throw new Error(response.error || 'Failed to send message');
+  return response.data!;
 }
 
 // Health Check

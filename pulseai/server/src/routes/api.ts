@@ -226,36 +226,14 @@ router.get('/activity', (req: Request, res: Response) => {
 
 // AI Chat
 router.post('/assistant/chat', async (req: Request, res: Response) => {
-  const requestId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  const startTime = Date.now();
-  
   try {
     const { message } = req.body;
     
-    // Log the incoming request for debugging
-    console.log(`[API] Chat request ${requestId} received`);
-    console.log(`[API] Request body: ${JSON.stringify(req.body)}`);
-    console.log(`[API] Message received: "${message?.substring(0, 100)}${message?.length > 100 ? '...' : ''}"`);
-    console.log(`[API] Message length: ${message?.length || 0} characters`);
-    
     if (!message || typeof message !== 'string') {
-      console.warn(`[API] Invalid request for ${requestId}: message is missing or not a string`);
       return res.status(400).json({
         success: false,
         error: 'Invalid request',
         details: 'Message is required and must be a string',
-        requestId,
-      });
-    }
-    
-    // Validate message content
-    if (message.trim().length === 0) {
-      console.warn(`[API] Empty message received for ${requestId}`);
-      return res.status(400).json({
-        success: false,
-        error: 'Empty message',
-        details: 'Please provide a non-empty message',
-        requestId,
       });
     }
     
@@ -263,30 +241,16 @@ router.post('/assistant/chat', async (req: Request, res: Response) => {
     addActivityLog({
       type: 'user_action',
       message: `User sent message: "${message.substring(0, 50)}..."`,
-      metadata: { requestId, messageLength: message.length },
     });
     
     // Simulate AI response
     const aiResponse = await simulateAIResponse(message);
     
-    const endTime = Date.now();
-    const processingTime = endTime - startTime;
-    
-    // Log the response for debugging
-    console.log(`[API] Response generated for ${requestId}`);
-    console.log(`[API] Response: "${aiResponse.substring(0, 100)}${aiResponse.length > 100 ? '...' : ''}"`);
-    console.log(`[API] Processing time: ${processingTime}ms`);
-    
     // Add to chat history
     addActivityLog({
       type: 'ai_generation',
       message: 'AI generated response',
-      metadata: { 
-        requestId, 
-        messageLength: message.length,
-        responseLength: aiResponse.length,
-        processingTime: processingTime
-      },
+      metadata: { messageLength: message.length },
     });
     
     res.json({
@@ -294,23 +258,12 @@ router.post('/assistant/chat', async (req: Request, res: Response) => {
       data: {
         response: aiResponse,
       },
-      metadata: {
-        requestId,
-        processingTime,
-        timestamp: new Date().toISOString()
-      },
     });
   } catch (error) {
-    const requestId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    console.error(`[API] Error processing chat request ${requestId}`);
-    console.error(`[API] Error details: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    console.error(`[API] Stack trace: ${error instanceof Error ? error.stack : 'N/A'}`);
-    
     res.status(500).json({
       success: false,
       error: 'Failed to process chat request',
       details: error instanceof Error ? error.message : 'Unknown error',
-      requestId,
     });
   }
 });
