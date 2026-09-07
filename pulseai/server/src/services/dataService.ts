@@ -162,7 +162,13 @@ export function initializeData(): void {
     {
       id: uuidv4(),
       role: 'assistant',
-      content: 'Here are your latest project updates:\n\n1. Website Redesign - 65% complete\n2. API Integration - 45% complete\n3. Security Audit - 10% complete\n\nWould you like more details on any of these?',
+      content: 'Here are your latest project updates:
+
+1. Website Redesign - 65% complete
+2. API Integration - 45% complete
+3. Security Audit - 10% complete
+
+Would you like more details on any of these?',
       timestamp: new Date(Date.now() - 1200000),
     },
   ];
@@ -433,7 +439,15 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
   else if (lowerMessage.includes('help') || lowerMessage.includes('assist') || lowerMessage.includes('can you')) {
     const truncatedQuery = trimmedMessage.substring(0, 50);
     const ellipsis = trimmedMessage.length > 50 ? '...' : '';
-    response = `I'm PulseAI, your intelligent analytics assistant! I can help you with:\n\n• Revenue analysis and forecasting\n• Project tracking and timeline generation\n• User acquisition insights\n• Data visualization and reporting\n• Performance metrics and KPIs\n\nBased on your question "${truncatedQuery}${ellipsis}", I'm ready to provide detailed insights. What specific information would you like to explore?`;
+    response = `I'm PulseAI, your intelligent analytics assistant! I can help you with:
+
+• Revenue analysis and forecasting
+• Project tracking and timeline generation
+• User acquisition insights
+• Data visualization and reporting
+• Performance metrics and KPIs
+
+Based on your question "${truncatedQuery}${ellipsis}", I'm ready to provide detailed insights. What specific information would you like to explore?`;
   }
   else if (lowerMessage.includes('chart') || lowerMessage.includes('graph') || lowerMessage.includes('visual') || lowerMessage.includes('display')) {
     const chartType = Math.random() > 0.5 ? 'line' : 'bar';
@@ -441,7 +455,14 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const truncatedQuery = trimmedMessage.substring(0, 50);
     const ellipsis = trimmedMessage.length > 50 ? '...' : '';
     
-    response = `Visualization Request: I can generate ${chartType} charts for your data. Based on your query about "${truncatedQuery}${ellipsis}", I recommend displaying:\n\n• Revenue trends over the last 30 days (${dataPoints} data points)\n• User acquisition patterns\n• Project progress timelines\n• Performance metrics comparison\n\nThe charts will highlight key insights and make the data more actionable. Would you like me to generate a specific chart type or focus on a particular metric?`;
+    response = `Visualization Request: I can generate ${chartType} charts for your data. Based on your query about "${truncatedQuery}${ellipsis}", I recommend displaying:
+
+• Revenue trends over the last 30 days (${dataPoints} data points)
+• User acquisition patterns
+• Project progress timelines
+• Performance metrics comparison
+
+The charts will highlight key insights and make the data more actionable. Would you like me to generate a specific chart type or focus on a particular metric?`;
   }
   else if (lowerMessage.includes('error') || lowerMessage.includes('issue') || lowerMessage.includes('problem')) {
     const errorCount = Math.floor(2 + Math.random() * 8);
@@ -453,7 +474,13 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const forecastPeriod = Math.floor(30 + Math.random() * 60);
     const growthRate = Math.round(8 + Math.random() * 12);
     
-    response = `Forecast Analysis: Based on current trends, I'm projecting a ${growthRate}% growth rate over the next ${forecastPeriod} days. Key indicators suggest:\n\n• Revenue: Upward trajectory with ${Math.round(5 + Math.random() * 10)}% monthly increase\n• User acquisition: Steady growth of ${Math.floor(15 + Math.random() * 20)} new users per week\n• Project completion: Accelerating at ${Math.round(2 + Math.random() * 3)}% per week\n\nThe forecast model considers historical data, seasonal patterns, and current momentum. Would you like a detailed breakdown of the forecasting methodology?`;
+    response = `Forecast Analysis: Based on current trends, I'm projecting a ${growthRate}% growth rate over the next ${forecastPeriod} days. Key indicators suggest:
+
+• Revenue: Upward trajectory with ${Math.round(5 + Math.random() * 10)}% monthly increase
+• User acquisition: Steady growth of ${Math.floor(15 + Math.random() * 20)} new users per week
+• Project completion: Accelerating at ${Math.round(2 + Math.random() * 3)}% per week
+
+The forecast model considers historical data, seasonal patterns, and current momentum. Would you like a detailed breakdown of the forecasting methodology?`;
   }
   else if (lowerMessage.includes('summary') || lowerMessage.includes('overview') || lowerMessage.includes('report')) {
     const summaryType = Math.random() > 0.5 ? 'executive' : 'detailed';
@@ -461,7 +488,19 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const formattedUsers = 8542.toLocaleString();
     const activeProjectCount = projects.filter(p => p.status === 'active').length;
     
-    response = `Executive Summary: Here's an overview of your current analytics dashboard:\n\n📊 **Key Metrics**:\n• Total Revenue: $${formattedRevenue} (+${Math.round(10 + Math.random() * 5)}%)\n• Active Users: ${formattedUsers} (+${Math.round(3 + Math.random() * 2)}%)\n• Active Projects: ${activeProjectCount}\n\n🎯 **Top Insights**:\n1. Revenue growth is accelerating\n2. User engagement is at an all-time high\n3. Project delivery is on track\n\n${summaryType === 'executive' ? 'Would you like a deeper dive into any specific metric?' : 'I can provide more granular data on any of these areas.'}`;
+    response = `Executive Summary: Here's an overview of your current analytics dashboard:
+
+📊 **Key Metrics**:
+• Total Revenue: $${formattedRevenue} (+${Math.round(10 + Math.random() * 5)}%)
+• Active Users: ${formattedUsers} (+${Math.round(3 + Math.random() * 2)}%)
+• Active Projects: ${activeProjectCount}
+
+🎯 **Top Insights**:
+1. Revenue growth is accelerating
+2. User engagement is at an all-time high
+3. Project delivery is on track
+
+${summaryType === 'executive' ? 'Would you like a deeper dive into any specific metric?' : 'I can provide more granular data on any of these areas.'}`;
   }
   else {
     // Generic response with personalized content based on input
@@ -471,7 +510,16 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const truncatedQuery = trimmedMessage.substring(0, 80);
     const ellipsis = trimmedMessage.length > 80 ? '...' : '';
     
-    response = `I've analyzed your query: "${truncatedQuery}${ellipsis}".\n\nBased on our comprehensive data analysis, I've identified ${insightCount} key insights relevant to your question. Our AI processing has evaluated ${wordCount} words in your request and cross-referenced them with ${projects.length} active projects and ${8542.toLocaleString()} user data points.\n\nKey findings:\n• The system shows strong correlation with your query\n• ${Math.round(80 + Math.random() * 15)}% confidence in the analysis\n• ${Math.floor(5 + Math.random() * 10)} actionable recommendations available\n\nWould you like me to elaborate on any specific aspect or generate a detailed report?`;
+    response = `I've analyzed your query: "${truncatedQuery}${ellipsis}".
+
+Based on our comprehensive data analysis, I've identified ${insightCount} key insights relevant to your question. Our AI processing has evaluated ${wordCount} words in your request and cross-referenced them with ${projects.length} active projects and ${8542.toLocaleString()} user data points.
+
+Key findings:
+• The system shows strong correlation with your query
+• ${Math.round(80 + Math.random() * 15)}% confidence in the analysis
+• ${Math.floor(5 + Math.random() * 10)} actionable recommendations available
+
+Would you like me to elaborate on any specific aspect or generate a detailed report?`;
   }
   
   // Add request metadata to response for debugging
