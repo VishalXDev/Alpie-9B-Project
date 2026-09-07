@@ -150,7 +150,7 @@ export function initializeData(): void {
     {
       id: uuidv4(),
       role: 'assistant',
-      content: "Hello! I'm PulseAI, your intelligent assistant. How can I help you today?",
+      content: 'Hello! I\'m PulseAI, your intelligent assistant. How can I help you today?',
       timestamp: new Date(Date.now() - 3600000),
     },
     {
@@ -162,13 +162,7 @@ export function initializeData(): void {
     {
       id: uuidv4(),
       role: 'assistant',
-      content: 'Here are your latest project updates:
-
-1. Website Redesign - 65% complete
-2. API Integration - 45% complete
-3. Security Audit - 10% complete
-
-Would you like more details on any of these?',
+      content: 'Here are your latest project updates:\n\n1. Website Redesign - 65% complete\n2. API Integration - 45% complete\n3. Security Audit - 10% complete\n\nWould you like more details on any of these?',
       timestamp: new Date(Date.now() - 1200000),
     },
   ];
@@ -219,22 +213,22 @@ export function getKPIS(): KPI[] {
 export function getRevenueData(): RevenueDataPoint[] {
   const data: RevenueDataPoint[] = [];
   const today = new Date();
-
+  
   for (let i = 29; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
-
+    
     const day = date.getDate();
     const revenue = 4500 + Math.random() * 3000 + (day * 150);
     const users = 280 + Math.floor(Math.random() * 50) + (day * 2);
-
+    
     data.push({
       date: date.toISOString().split('T')[0],
       revenue: Math.round(revenue),
       users: users,
     });
   }
-
+  
   return data;
 }
 
@@ -242,43 +236,40 @@ export function getRevenueData(): RevenueDataPoint[] {
 export function getUserAcquisitionData(): UserAcquisitionDataPoint[] {
   const data: UserAcquisitionDataPoint[] = [];
   const today = new Date();
-
+  
   for (let i = 29; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
-
+    
     const newUsers = 15 + Math.floor(Math.random() * 25);
     const activeUsers = 180 + Math.floor(Math.random() * 40);
-
+    
     data.push({
       date: date.toISOString().split('T')[0],
       newUsers,
       activeUsers,
     });
   }
-
+  
   return data;
 }
 
 // Get all projects with optional filtering
-export function getProjects(
-  status?: 'active' | 'pending' | 'completed',
-  search?: string
-): Project[] {
+export function getProjects(status?: 'active' | 'pending' | 'completed', search?: string): Project[] {
   let result = projects;
-
+  
   if (status) {
     result = result.filter(p => p.status === status);
   }
-
+  
   if (search) {
     const searchTerm = search.toLowerCase();
-    result = result.filter(p =>
+    result = result.filter(p => 
       p.title.toLowerCase().includes(searchTerm) ||
       p.description.toLowerCase().includes(searchTerm)
     );
   }
-
+  
   return result;
 }
 
@@ -301,7 +292,7 @@ export function createProject(data: {
     updatedAt: new Date(),
   };
   projects.unshift(newProject);
-
+  
   addActivityLog({
     type: 'user_action',
     message: `Created new project "${newProject.title}"`,
@@ -315,7 +306,7 @@ export function createProject(data: {
 export function updateProject(id: string, updates: Partial<Project>): Project | null {
   const index = projects.findIndex(p => p.id === id);
   if (index === -1) return null;
-
+  
   projects[index] = {
     ...projects[index],
     ...updates,
@@ -335,7 +326,7 @@ export function updateProject(id: string, updates: Partial<Project>): Project | 
 export function deleteProject(id: string): boolean {
   const index = projects.findIndex(p => p.id === id);
   if (index === -1) return false;
-
+  
   const title = projects[index].title;
   projects.splice(index, 1);
 
@@ -384,36 +375,34 @@ export function addChatMessage(message: Omit<ChatMessage, 'id' | 'timestamp'>): 
 export async function simulateAIResponse(userMessage: string): Promise<string> {
   const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const startTime = Date.now();
-
+  
   // Log the incoming request for debugging
   console.log(`[AI Assistant] Processing request ${requestId}`);
-  console.log(
-    `[AI Assistant] Input received: "${userMessage.substring(0, 100)}${userMessage.length > 100 ? '...' : ''}"`
-  );
+  console.log(`[AI Assistant] Input received: "${userMessage.substring(0, 100)}${userMessage.length > 100 ? '...' : ''}"`);
   console.log(`[AI Assistant] Input length: ${userMessage.length} characters`);
-
+  
   // Simulate network delay for realistic response time
   await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1000));
-
+  
   const endTime = Date.now();
   const processingTime = endTime - startTime;
-
+  
   // Log the response generation
   console.log(`[AI Assistant] Generating response for request ${requestId}`);
   console.log(`[AI Assistant] Processing time: ${processingTime}ms`);
-
+  
   // Handle edge cases
   if (!userMessage || userMessage.trim().length === 0) {
     console.warn(`[AI Assistant] Empty or whitespace-only input received for request ${requestId}`);
     return "I'm here to help! Please ask me a question about your analytics, projects, or any other topic.";
   }
-
+  
   const trimmedMessage = userMessage.trim();
   const lowerMessage = trimmedMessage.toLowerCase();
-
+  
   // Dynamic response generation based on input content
-  let response = '';
-
+  let response = "";
+  
   // Check for specific keywords to provide context-aware responses
   if (lowerMessage.includes('revenue') || lowerMessage.includes('money') || lowerMessage.includes('sales')) {
     const revenueGrowth = Math.round(5 + Math.random() * 25);
@@ -421,7 +410,8 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const formattedCurrentRevenue = 125430.toLocaleString();
     const formattedProjectedRevenue = projectedRevenue.toLocaleString();
     response = `Regarding your revenue inquiry: Our current revenue stands at $${formattedCurrentRevenue}. We've observed a ${revenueGrowth}% growth trend over the past month, projecting approximately $${formattedProjectedRevenue} for the current period. The revenue data shows consistent upward momentum, particularly in the last 14 days. Would you like a detailed breakdown by product or region?`;
-  } else if (lowerMessage.includes('project') || lowerMessage.includes('task') || lowerMessage.includes('work')) {
+  } 
+  else if (lowerMessage.includes('project') || lowerMessage.includes('task') || lowerMessage.includes('work')) {
     const activeCount = projects.filter(p => p.status === 'active').length;
     const pendingCount = projects.filter(p => p.status === 'pending').length;
     const completedCount = projects.filter(p => p.status === 'completed').length;
@@ -429,109 +419,72 @@ export async function simulateAIResponse(userMessage: string): Promise<string> {
     const topProgress = projects[0]?.progress || 0;
     const truncatedQuery = trimmedMessage.substring(0, 50);
     const ellipsis = trimmedMessage.length > 50 ? '...' : '';
-
+    
     response = `Project Analysis: You currently have ${activeCount} active projects, ${pendingCount} pending, and ${completedCount} completed. The most advanced project is "${topProject}" at ${topProgress}% completion. Based on your query about "${truncatedQuery}${ellipsis}", I recommend reviewing the active projects first, particularly the API Integration which is at 45% progress. Would you like me to generate a detailed timeline or resource allocation plan?`;
-  } else if (lowerMessage.includes('user') || lowerMessage.includes('customer') || lowerMessage.includes('client')) {
+  }
+  else if (lowerMessage.includes('user') || lowerMessage.includes('customer') || lowerMessage.includes('client')) {
     const totalUsers = 8542;
     const newUsers = Math.floor(15 + Math.random() * 25);
     const activeUsers = Math.floor(180 + Math.random() * 40);
     const engagementRate = Math.round(65 + Math.random() * 15);
-
+    
     response = `User Analytics: Our platform currently has ${totalUsers.toLocaleString()} total users, with ${newUsers} new users acquired in the last 30 days. Active user engagement stands at ${activeUsers} users, representing a ${engagementRate}% engagement rate. The user acquisition data indicates healthy growth, particularly in the enterprise segment. Would you like to see the detailed user acquisition trends?`;
-  } else if (lowerMessage.includes('help') || lowerMessage.includes('assist') || lowerMessage.includes('can you')) {
+  }
+  else if (lowerMessage.includes('help') || lowerMessage.includes('assist') || lowerMessage.includes('can you')) {
     const truncatedQuery = trimmedMessage.substring(0, 50);
     const ellipsis = trimmedMessage.length > 50 ? '...' : '';
-    response = `I'm PulseAI, your intelligent analytics assistant! I can help you with:
-
-• Revenue analysis and forecasting
-• Project tracking and timeline generation
-• User acquisition insights
-• Data visualization and reporting
-• Performance metrics and KPIs
-
-Based on your question "${truncatedQuery}${ellipsis}", I'm ready to provide detailed insights. What specific information would you like to explore?`;
-  } else if (lowerMessage.includes('chart') || lowerMessage.includes('graph') || lowerMessage.includes('visual') || lowerMessage.includes('display')) {
+    response = `I'm PulseAI, your intelligent analytics assistant! I can help you with:\n\n• Revenue analysis and forecasting\n• Project tracking and timeline generation\n• User acquisition insights\n• Data visualization and reporting\n• Performance metrics and KPIs\n\nBased on your question "${truncatedQuery}${ellipsis}", I'm ready to provide detailed insights. What specific information would you like to explore?`;
+  }
+  else if (lowerMessage.includes('chart') || lowerMessage.includes('graph') || lowerMessage.includes('visual') || lowerMessage.includes('display')) {
     const chartType = Math.random() > 0.5 ? 'line' : 'bar';
     const dataPoints = Math.floor(10 + Math.random() * 20);
     const truncatedQuery = trimmedMessage.substring(0, 50);
     const ellipsis = trimmedMessage.length > 50 ? '...' : '';
-
-    response = `Visualization Request: I can generate ${chartType} charts for your data. Based on your query about "${truncatedQuery}${ellipsis}", I recommend displaying:
-
-• Revenue trends over the last 30 days (${dataPoints} data points)
-• User acquisition patterns
-• Project progress timelines
-• Performance metrics comparison
-
-The charts will highlight key insights and make the data more actionable. Would you like me to generate a specific chart type or focus on a particular metric?`;
-  } else if (lowerMessage.includes('error') || lowerMessage.includes('issue') || lowerMessage.includes('problem')) {
+    
+    response = `Visualization Request: I can generate ${chartType} charts for your data. Based on your query about "${truncatedQuery}${ellipsis}", I recommend displaying:\n\n• Revenue trends over the last 30 days (${dataPoints} data points)\n• User acquisition patterns\n• Project progress timelines\n• Performance metrics comparison\n\nThe charts will highlight key insights and make the data more actionable. Would you like me to generate a specific chart type or focus on a particular metric?`;
+  }
+  else if (lowerMessage.includes('error') || lowerMessage.includes('issue') || lowerMessage.includes('problem')) {
     const errorCount = Math.floor(2 + Math.random() * 8);
     const resolvedCount = Math.floor(errorCount + Math.floor(Math.random() * 5));
-
+    
     response = `System Status: I've checked our logs and found ${errorCount} recent system events. ${resolvedCount} have been resolved automatically, while the remaining issues are being monitored. The most recent activity shows normal operation with no critical errors. If you're experiencing a specific issue, please provide more details so I can investigate further. Would you like to see the detailed error logs?`;
-  } else if (lowerMessage.includes('forecast') || lowerMessage.includes('predict') || lowerMessage.includes('future')) {
+  }
+  else if (lowerMessage.includes('forecast') || lowerMessage.includes('predict') || lowerMessage.includes('future')) {
     const forecastPeriod = Math.floor(30 + Math.random() * 60);
     const growthRate = Math.round(8 + Math.random() * 12);
-
-    response = `Forecast Analysis: Based on current trends, I'm projecting a ${growthRate}% growth rate over the next ${forecastPeriod} days. Key indicators suggest:
-
-• Revenue: Upward trajectory with ${Math.round(5 + Math.random() * 10)}% monthly increase
-• User acquisition: Steady growth of ${Math.floor(15 + Math.random() * 20)} new users per week
-• Project completion: Accelerating at ${Math.round(2 + Math.random() * 3)}% per week
-
-The forecast model considers historical data, seasonal patterns, and current momentum. Would you like a detailed breakdown of the forecasting methodology?`;
-  } else if (lowerMessage.includes('summary') || lowerMessage.includes('overview') || lowerMessage.includes('report')) {
+    
+    response = `Forecast Analysis: Based on current trends, I'm projecting a ${growthRate}% growth rate over the next ${forecastPeriod} days. Key indicators suggest:\n\n• Revenue: Upward trajectory with ${Math.round(5 + Math.random() * 10)}% monthly increase\n• User acquisition: Steady growth of ${Math.floor(15 + Math.random() * 20)} new users per week\n• Project completion: Accelerating at ${Math.round(2 + Math.random() * 3)}% per week\n\nThe forecast model considers historical data, seasonal patterns, and current momentum. Would you like a detailed breakdown of the forecasting methodology?`;
+  }
+  else if (lowerMessage.includes('summary') || lowerMessage.includes('overview') || lowerMessage.includes('report')) {
     const summaryType = Math.random() > 0.5 ? 'executive' : 'detailed';
     const formattedRevenue = 125430.toLocaleString();
     const formattedUsers = 8542.toLocaleString();
     const activeProjectCount = projects.filter(p => p.status === 'active').length;
-
-    response = `Executive Summary: Here's an overview of your current analytics dashboard:
-
-📊 **Key Metrics**:
-• Total Revenue: $${formattedRevenue} (+${Math.round(10 + Math.random() * 5)}%)
-• Active Users: ${formattedUsers} (+${Math.round(3 + Math.random() * 2)}%)
-• Active Projects: ${activeProjectCount}
-
-🎯 **Top Insights**:
-1. Revenue growth is accelerating
-2. User engagement is at an all-time high
-3. Project delivery is on track
-
-${summaryType === 'executive' ? 'Would you like a deeper dive into any specific metric?' : 'I can provide more granular data on any of these areas.'}`;
-  } else {
+    
+    response = `Executive Summary: Here's an overview of your current analytics dashboard:\n\n📊 **Key Metrics**:\n• Total Revenue: $${formattedRevenue} (+${Math.round(10 + Math.random() * 5)}%)\n• Active Users: ${formattedUsers} (+${Math.round(3 + Math.random() * 2)}%)\n• Active Projects: ${activeProjectCount}\n\n🎯 **Top Insights**:\n1. Revenue growth is accelerating\n2. User engagement is at an all-time high\n3. Project delivery is on track\n\n${summaryType === 'executive' ? 'Would you like a deeper dive into any specific metric?' : 'I can provide more granular data on any of these areas.'}`;
+  }
+  else {
     // Generic response with personalized content based on input
     const wordCount = trimmedMessage.split(' ').length;
     const insightCount = Math.floor(3 + Math.random() * 5);
     const confidence = Math.round(75 + Math.random() * 20);
     const truncatedQuery = trimmedMessage.substring(0, 80);
     const ellipsis = trimmedMessage.length > 80 ? '...' : '';
-
-    response = `I've analyzed your query: "${truncatedQuery}${ellipsis}".
-
-Based on our comprehensive data analysis, I've identified ${insightCount} key insights relevant to your question. Our AI processing has evaluated ${wordCount} words in your request and cross-referenced them with ${projects.length} active projects and ${8542.toLocaleString()} user data points.
-
-Key findings:
-• The system shows strong correlation with your query
-• ${Math.round(80 + Math.random() * 15)}% confidence in the analysis
-• ${Math.floor(5 + Math.random() * 10)} actionable recommendations available
-
-Would you like me to elaborate on any specific aspect or generate a detailed report?`;
+    
+    response = `I've analyzed your query: "${truncatedQuery}${ellipsis}".\n\nBased on our comprehensive data analysis, I've identified ${insightCount} key insights relevant to your question. Our AI processing has evaluated ${wordCount} words in your request and cross-referenced them with ${projects.length} active projects and ${8542.toLocaleString()} user data points.\n\nKey findings:\n• The system shows strong correlation with your query\n• ${Math.round(80 + Math.random() * 15)}% confidence in the analysis\n• ${Math.floor(5 + Math.random() * 10)} actionable recommendations available\n\nWould you like me to elaborate on any specific aspect or generate a detailed report?`;
   }
-
+  
   // Add request metadata to response for debugging
   const metadata = {
     requestId,
     processingTime: processingTime,
     inputLength: userMessage.length,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   };
-
-  console.log(
-    `[AI Assistant] Response generated for request ${requestId}: "${response.substring(0, 100)}${response.length > 100 ? '...' : ''}"`
-  );
+  
+  console.log(`[AI Assistant] Response generated for request ${requestId}: "${response.substring(0, 100)}${response.length > 100 ? '...' : ''}"`);
   console.log(`[AI Assistant] Request metadata: ${JSON.stringify(metadata)}`);
-
+  
   return response;
 }
 
