@@ -33,12 +33,22 @@ export function ChatInterface({ title = 'AI Assistant' }: ChatInterfaceProps) {
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
-    if (!inputValue.trim()) return;
+    const trimmedInput = inputValue.trim();
+    
+    if (!trimmedInput) {
+      console.warn('[ChatInterface] Empty input, not sending message');
+      return;
+    }
+
+    const requestId = `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    console.log(`[ChatInterface] Sending message ${requestId}`);
+    console.log(`[ChatInterface] Input: "${trimmedInput.substring(0, 100)}${trimmedInput.length > 100 ? '...' : ''}"`);
+    console.log(`[ChatInterface] Input length: ${trimmedInput.length} characters`);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue.trim(),
+      content: trimmedInput,
       timestamp: new Date().toISOString(),
     };
 
@@ -47,8 +57,11 @@ export function ChatInterface({ title = 'AI Assistant' }: ChatInterfaceProps) {
     setIsTyping(true);
 
     try {
-      const response = await chatMutation.mutateAsync(userMessage.content);
+      const response = await chatMutation.mutateAsync(trimmedInput);
       
+      console.log(`[ChatInterface] Received response for ${requestId}`);
+      console.log(`[ChatInterface] Response: "${response.response.substring(0, 100)}${response.response.length > 100 ? '...' : ''}"`);
+
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -57,7 +70,10 @@ export function ChatInterface({ title = 'AI Assistant' }: ChatInterfaceProps) {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch {
+    } catch (error) {
+      console.error(`[ChatInterface] Error sending message ${requestId}`);
+      console.error(`[ChatInterface] Error details: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
